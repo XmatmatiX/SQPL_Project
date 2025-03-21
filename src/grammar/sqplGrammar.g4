@@ -26,10 +26,10 @@ command
 //4)  pokaż    Nazwa    z tabeli    towar    gdzie ilość > 5    sortuj po nazwa rosnąco
 //4) SELECT    Nazwa       FROM     towar    WHERE ilość > 5    ORDER BY nazwa ASC
 select
-    : SELECT (columns | STAR) FROM ID  #select_items
-    | SELECT (columns | STAR) FROM ID where #select_where_items
-    | SELECT (columns | STAR) FROM ID order_by #select_order_items
-    | SELECT (columns | STAR) FROM ID where order_by #select_where_order_items
+    : SELECT columns FROM ID  #select_items
+    | SELECT columns FROM ID where #select_where_items
+    | SELECT columns FROM ID order_by #select_order_items
+    | SELECT columns FROM ID where order_by #select_where_order_items
     ;
 
 //możliwości komendy update dla elementu tabeli
@@ -131,6 +131,7 @@ columns
     : ID+
     | ID_COMMA+ ID
     | ID_COMMA+ ID (('i'|'oraz') ID)
+    | STAR
     ;
 
 //przypisywanie wartości dla konkretnej kolumny
@@ -205,8 +206,6 @@ SEMI : ';';
 DOUBLE : [0-9]+ (','|'.') [0-9]+ ;
 INT : [0-9]+ ;
 TEXT : '"' ( ~["] | '""' )* '"' ;
-//Dowolny ciąg znaków
-//STRING : [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ][a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9_]*;
 
 //Pominięcie białych znaków
 WS : [ \t\r\n]+ -> skip ;
