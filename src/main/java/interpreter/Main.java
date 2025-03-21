@@ -30,7 +30,7 @@ public class Main {
 	// System.out.println(tree.toStringTree(parser));
 
 	// create a visitor to traverse the parse tree
-	SQPLconverter visitor = new SQPLconverter();
+	SQPLConverter visitor = new SQPLConverter();
 	System.out.println(visitor.visit(tree));
   }
 }
