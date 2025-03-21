@@ -5,10 +5,16 @@ import grammar.sqplGrammarParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import java.io.IOException;
+
 public class Main {
   public static void main(String[] args) throws Exception {
-	// create a CharStream that reads from standard input
-	CharStream input = CharStreams.fromStream(System.in);
+	  CharStream input = null;
+	  try {
+		  input = CharStreams.fromFileName("kod.sqpl");
+	  } catch (IOException e) {
+		  throw new RuntimeException(e);
+	  }
 
 	// create a lexer that feeds off of input CharStream
 	sqplGrammarLexer lexer = new sqplGrammarLexer(input);

@@ -116,7 +116,7 @@ DELETE : 'usuń obiekty z tabeli' | 'usuń elementy z tabeli';
 CREATE_TABLE : 'dodaj tabelę' | 'stwórz tabelę' | 'utwórz tabelę';
 DELETE_TABLE : 'usuń tabelę' | 'usuń';
 DESCRIBE : 'opisz tabelę' | 'przedstaw tabelę';
-ALTER_TABLE : 'aktualizuj tabelę' | 'zmień tabelę';
+ALTER_TABLE : 'modyfikuj tabelę' | 'aktualizuj tabelę' | 'zmień tabelę';
 
 CREATE_DB : 'stwórz bazę danych' | 'utwórz bazę danych' ;
 DROP_DB : 'usuń bazę danych';
