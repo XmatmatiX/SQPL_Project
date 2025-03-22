@@ -144,13 +144,13 @@ equation : ID '=' value;
 condition : logic_sign column_name=ID SIGN value;
 
 //ograniczenia dla kolumn w tabelach
-
 constraints : (PRIMARY_KEY|foreign_key|UNIQUE|NOT_NULL|default)*;
 
 
 //operator logiczny do sortowania
 logic_sign : (AND|OR|NOT)?;
 
+//typy danych dla kolumn
 data_type
     : 'tekst'   #text
     | 'tekst(' INT ')' #text
@@ -164,7 +164,9 @@ data_type
     ;
 
 value : (INT|DOUBLE|ID|TEXT);
+//ograniczenie kolumny - domyślny typ danych
 default : 'domyślnie ' value;
+//ograniczenie kolumny - klucz obcy
 foreign_key : 'klucz obcy dla ' ID '(' ID ')';
 
 //SŁOWA KLUCZOWE//
@@ -198,9 +200,7 @@ DROP_COLUMN : 'usuń kolumnę';
 AS : 'jako';
 SIGN : '>' | '<' | '==' | '>=' | '<=';
 
-//Znaki szczególne
 STAR : 'wszystko' | 'wszystkie elementy' | 'wszystkie dane';
-
 
 PRIMARY_KEY : 'klucz główny';
 UNIQUE : 'unikalny';
