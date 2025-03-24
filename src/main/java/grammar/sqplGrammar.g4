@@ -1,7 +1,7 @@
 grammar sqplGrammar;
 
 // wykonuje dowolną ilość polskich komend
-prog: (command SEMI)* EOF;
+prog: (command SEMI)* end_of_file=EOF;
 
 command
     : select
@@ -203,8 +203,8 @@ SIGN : '>' | '<' | '==' | '>=' | '<=';
 STAR : 'wszystko' | 'wszystkie elementy' | 'wszystkie dane';
 
 PRIMARY_KEY : 'klucz główny';
-UNIQUE : 'unikalny';
-NOT_NULL: 'nie puste';
+UNIQUE : 'unikalny' | 'unikalna' | 'unikalne';
+NOT_NULL: 'nie puste' | 'nie pusta';
 
 AND : 'i';
 OR : 'lub';

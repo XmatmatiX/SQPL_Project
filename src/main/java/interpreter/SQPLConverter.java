@@ -12,6 +12,19 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
     private StringBuilder command = new StringBuilder();
 
     /**
+     * Przejście przez wszystkie komendy i zmiana na komendy SQL
+     * @param ctx the parse tree
+     * @return lista komend w języku SQL
+     */
+    @Override
+    public String visitProg(sqplGrammarParser.ProgContext ctx) {
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            visit(ctx.getChild(i));             //przechodzi przez każdą komendę 
+        }
+        return commands.toString();
+    }
+
+    /**
      * Tworzy zapytanie SELECT, pobierając dane o kolumnach oraz nazwie tabeli.
      * Następnie dodaje polecenie do listy poleceń.
      * @param ctx the parse tree
@@ -26,7 +39,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID().getText());     //pobieranie nazwy tabeli
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -46,7 +59,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.where()));     //tłumaczenie gramatyki where na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -66,7 +79,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.order_by()));  //tłumaczenie gramatyki order by na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -88,7 +101,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.order_by()));  //tłumaczenie gramatyki order by na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -114,7 +127,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.where()));                 //tłumaczenie gramatyki where na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -141,7 +154,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.delete(command.length() - 2, command.length());
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -162,7 +175,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         }
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -181,7 +194,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.definition()));    //tłumaczenie definicji kolumn na język SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -198,7 +211,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID().getText());     //pobranie nazwy tabeli
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -220,7 +233,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.constraints()));       //tłumaczenie ograniczeń na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -242,7 +255,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(visit(ctx.data_type()));        //tłumaczenie typu na kod SQL
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -262,7 +275,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID(1).getText());    //pobranie nazwy kolumny
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -279,7 +292,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID().getText()); //pobranie nazwy tabeli
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -296,7 +309,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID().getText());     //pobranie nazwy bazy danych
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -313,7 +326,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
         command.append(ctx.ID().getText());     //pobranie nazwy bazy danych
         command.append(";");
         commands.add(command.toString());
-        System.out.println(commands);
+        //System.out.println(commands);
         return null;
     }
 
@@ -509,9 +522,9 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
     @Override
     public String visitLogic_sign(sqplGrammarParser.Logic_signContext ctx) {
         return switch (ctx.getText()) {
-            case "lub" -> "OR";
-            case "nie" -> "NOT";
-            default -> "AND";       //w przypadku braku zdefiniowanego znaku, przyjmujemy znak AND
+            case "lub" -> " OR ";
+            case "nie" -> " NOT ";
+            default -> " AND ";       //w przypadku braku zdefiniowanego znaku, przyjmujemy znak AND
         };
     }
 
@@ -523,7 +536,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
     @Override
     public String visitText(sqplGrammarParser.TextContext ctx) {
         String result = ctx.getText();      //pobierz typ danych
-        result = result.replace("tekst", "VARCHAR");    //zamień tekst na kod SQL
+        result = result.replace("tekst", " VARCHAR");    //zamień tekst na kod SQL
         if (ctx.INT() == null) {
             result+=("(255)");              //przyjmij (255) jako wartość domyślną
         }
@@ -538,7 +551,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
     @Override
     public String visitInt(sqplGrammarParser.IntContext ctx) {
         String result = ctx.getText();      //pobranie typu danych
-        result = result.replace("liczba całkowita", "INT");     //podmiana tekstu na kod SQL
+        result = result.replace("liczba całkowita", " INT");     //podmiana tekstu na kod SQL
         return result;
     }
 
@@ -550,7 +563,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
     @Override
     public String visitDouble(sqplGrammarParser.DoubleContext ctx) {
         String result = ctx.getText();      //pobranie typu danych
-        result = result.replace("liczba zmiennoprzecinkowa", "DOUBLE");     //pobranie teksty na kod SQL
+        result = result.replace("liczba zmiennoprzecinkowa", " DOUBLE");     //pobranie teksty na kod SQL
         return result;
     }
 
@@ -561,7 +574,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
      */
     @Override
     public String visitChar(sqplGrammarParser.CharContext ctx) {
-        return "CHAR";
+        return " CHAR ";
     }
 
     /**
@@ -571,7 +584,7 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
      */
     @Override
     public String visitDate(sqplGrammarParser.DateContext ctx) {
-        return "DATE";
+        return " DATE ";
     }
 
     /**
@@ -581,6 +594,6 @@ public class SQPLConverter extends sqplGrammarBaseVisitor<String> {
      */
     @Override
     public String visitBit(sqplGrammarParser.BitContext ctx) {
-        return "BIT";
+        return " BIT ";
     }
 }
