@@ -206,9 +206,10 @@ PRIMARY_KEY : 'klucz główny';
 UNIQUE : 'unikalny' | 'unikalna' | 'unikalne';
 NOT_NULL: 'nie puste' | 'nie pusta';
 
+NOT : 'i nie' | 'nie';
 AND : 'i';
 OR : 'lub';
-NOT : 'nie';
+
 //SEKCJA DANYCH OGÓLNYCH//
 
 //Identyfikator np nazwy tabeli lub kolumny

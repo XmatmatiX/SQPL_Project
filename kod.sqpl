@@ -1,6 +1,1 @@
-aktualizuj tabelę    towar    dodaj kolumnę    cena   liczba całkowita    nie puste;
-zmień tabelę   towar   modyfikuj kolumnę    cena    liczba zmiennoprzecinkowa(10,2);
 modyfikuj tabelę     towar    usuń kolumnę     cena;
-usuń tabelę    towar;
-stwórz bazę danych    sklep;
-usuń bazę danych    sklep;
