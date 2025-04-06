@@ -1,7 +1,7 @@
 grammar sqplGrammar;
 
 // wykonuje dowolną ilość polskich komend
-prog: (command SEMI)* EOF;
+prog: (command SEMI)* end_of_file=EOF;
 
 command
     : select
@@ -75,8 +75,8 @@ describe_table
 //3) modyfikuj tabelę     towar    usuń kolumnę     cena
 //3)    ALTER TABLE       towar    DROP COLUMN      cena
 update_table
-    : ALTER_TABLE ID ADD ID DATA_TYPE constraints #add_column
-    | ALTER_TABLE ID MODIFY ID DATA_TYPE #modify_column
+    : ALTER_TABLE ID ADD ID data_type constraints #add_column
+    | ALTER_TABLE ID MODIFY ID data_type #modify_column
     | ALTER_TABLE ID DROP_COLUMN ID #drop_column
     ;
 
@@ -104,46 +104,70 @@ drop_db
 //obsługa where
 // w której/gdzie ID > 5 i ID < 15 i imie = "Jacek" -> Where ID > 5, ID < 15, imie = "Jacek"
 where
-    : WHERE condition ('i' condition)*
+    : WHERE condition (condition)*
     ;
 
 //Kolejność wyświetlania (po konkretnej kolumnie lub kolumnach)
 //sortuj po ID rosnąco i imie malejąco -> order by ID ASC, imie DESC
 order_by
-    : ORDER_BY (ID (ASC|DESC)?)+
+    : ORDER_BY (ID order  'i')* (ID order)?
     ;
+
+order : (ASC|DESC)? ;
 
 //używany w insert, ma na celu wskazać kolumny lub ich wartości
 //(ID, imię, nazwisko) lub (6, "Michał", "Kaluska")
 object
-    : '(' (ID_COMMA)* ID ')'
-    | '(' ((INT|DOUBLE|ID|TEXT) ',')* (INT|DOUBLE|ID|TEXT) ')'
+    : '(' (ID_COMMA)* ID ')' #object_template
+    | '(' (value ',')* value ')' #object_instance
     ;
 
 //określa nazwy, typy i ograniczenia kolumn w tabeli
 //(ID jako liczba całkowita klucz główny nie puste, ...) -> (ID INT PRIMARY KEY NOT NULL, ...)
 definition
-    : '(' (ID AS DATA_TYPE constraints ',')* ID AS DATA_TYPE constraints ')'
+    : '(' (ID AS data_type constraints ',')* ID AS data_type constraints ')'
     ;
 
 //Wybór kolumn do pokazania (jeden lub więcej)
 columns
-    : ID+
-    | ID_COMMA+ ID
-    | ID_COMMA+ ID (('i'|'oraz') ID)
-    | STAR
+    : ID+ #columns_without_coma
+    | ID_COMMA+ ID #columns_with_coma
+    | STAR #columns_star
     ;
 
 //przypisywanie wartości dla konkretnej kolumny
 // nazwa = "projekt"
-equation : ID '=' (INT|DOUBLE|ID|TEXT);
+equation : ID '=' value;
 
 //Warunek do zapytania SQL
 //ilość == 25
-condition : ID SIGN (INT|DOUBLE|ID|TEXT);
+condition : logic_sign column_name=ID SIGN value;
 
 //ograniczenia dla kolumn w tabelach
-constraints : (PRIMARY_KEY|FOREIGN_KEY|UNIQUE|NOT_NULL|DEFAULT)*;
+constraints : (PRIMARY_KEY|foreign_key|UNIQUE|NOT_NULL|default)*;
+
+
+//operator logiczny do sortowania
+logic_sign : (AND|OR|NOT)?;
+
+//typy danych dla kolumn
+data_type
+    : 'tekst'   #text
+    | 'tekst(' INT ')' #text
+    | 'liczba całkowita' #int
+    | 'liczba całkowita(' INT ')' #int
+    | 'liczba zmiennoprzecinkowa' #double
+    | 'liczba zmiennoprzecinkowa(' INT ',' INT ')' #double
+    | 'znak' #char
+    | 'bit' #bit
+    | 'data' #date
+    ;
+
+value : (INT|DOUBLE|ID|TEXT);
+//ograniczenie kolumny - domyślny typ danych
+default : 'domyślnie ' value;
+//ograniczenie kolumny - klucz obcy
+foreign_key : 'klucz obcy dla ' ID '(' ID ')';
 
 //SŁOWA KLUCZOWE//
 
@@ -167,35 +191,25 @@ SET : 'ustaw' | 'wpisz';
 FROM : 'z' | 'z tabeli';
 WHERE : 'gdzie' | 'w której' ;
 ORDER_BY : 'sortuj po' | 'sortuj według' | 'sortuj' ;
-ASC : 'rosnąco' | 'alfabetycznie' ;
+ASC : 'rosnąco' ;
 DESC : 'malejąco' ;
 VALUES : 'o wartościach' | 'o danych';
 ADD : 'dodaj kolumnę' | 'wstaw kolumnę';
 MODIFY : 'modyfikuj kolumnę' | 'zmień kolumnę';
 DROP_COLUMN : 'usuń kolumnę';
 AS : 'jako';
-
 SIGN : '>' | '<' | '==' | '>=' | '<=';
 
-//Znaki szczególne
 STAR : 'wszystko' | 'wszystkie elementy' | 'wszystkie dane';
 
-DATA_TYPE : 'tekst'
-        | 'tekst(' INT ')'
-        | 'liczba całkowita'
-        | 'liczba całkowita(' INT ')'
-        | 'liczba zmiennoprzecinkowa'
-        | 'liczba zmiennoprzecinkowa(' INT ',' INT ')'
-        | 'znak'
-        | 'bit'
-        | 'data'
-        ;
-
 PRIMARY_KEY : 'klucz główny';
-UNIQUE : 'unikalny';
-NOT_NULL: 'nie puste';
-DEFAULT : 'domyślnie ' (INT|DOUBLE|ID|TEXT);
-FOREIGN_KEY : 'klucz obcy dla ' ID '(' ID ')';
+UNIQUE : 'unikalny' | 'unikalna' | 'unikalne';
+NOT_NULL: 'nie puste' | 'nie pusta';
+
+NOT : 'i nie' | 'nie';
+AND : 'i';
+OR : 'lub';
+
 //SEKCJA DANYCH OGÓLNYCH//
 
 //Identyfikator np nazwy tabeli lub kolumny
@@ -203,7 +217,7 @@ ID : [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ_] [a-zA-ZżźćńółęąśŻŹ
 
 ID_COMMA : [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ_] [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9_]* ',';
 SEMI : ';';
-DOUBLE : [0-9]+ (','|'.') [0-9]+ ;
+DOUBLE : [0-9]+ '.' [0-9]+ ;
 INT : [0-9]+ ;
 TEXT : '"' ( ~["] | '""' )* '"' ;
 
