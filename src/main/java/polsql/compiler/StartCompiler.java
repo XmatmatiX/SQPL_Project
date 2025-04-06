@@ -1,4 +1,4 @@
-package compiler;
+package polsql.compiler;
 
 
 import org.antlr.v4.runtime.CharStream;
@@ -8,8 +8,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
-import grammar.sqplGrammarLexer;
-import grammar.sqplGrammarParser;
+import polsql.grammar.sqplGrammarLexer;
+import polsql.grammar.sqplGrammarParser;
 
 import java.io.FileWriter;
 import java.io.IOException;
