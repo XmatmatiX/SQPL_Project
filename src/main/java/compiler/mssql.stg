@@ -1,0 +1,113 @@
+group mssql;
+
+prog(commands) ::= <<
+<commands; separator="\n">
+>>
+
+select_items(columns, table, where, order) ::= <<
+SELECT <columns> FROM <table> <if(where)> <where> <endif> <if(order)> <order><endif> ;
+>>
+
+update_item(table, equations, where) ::= <<
+UPDATE <table> SET <equations; separator=", "> <if(where)><where><endif>;
+>>
+
+insert(table, columns, values) ::= <<
+INSERT INTO <table> <columns> VALUES <values; separator=", ">;
+>>
+
+delete_item(table, where) ::= <<
+DELETE FROM <table><if(where)> <where><endif>;
+>>
+
+describe_table(table) ::= <<
+DESCRIBE <table>;
+>>
+
+add_column(table, column, data_type, constraints) ::= <<
+ALTER TABLE <table> ADD <column> <data_type> <constraints>;
+>>
+
+modify_column(table, column, data_type) ::= <<
+ALTER TABLE <table> ALTER COLUMN <column> <data_type>;
+>>
+
+drop_column(table, column) ::= <<
+ALTER TABLE <table> DROP COLUMN <column>;
+>>
+
+delete_table(table) ::= <<
+DROP TABLE <table>;
+>>
+
+create_db(name) ::= <<
+CREATE DATABASE <name>;
+>>
+
+create_table(table, definition) ::= <<
+CREATE TABLE <table> <definition>;
+>>
+
+drop_db(name) ::= <<
+DROP DATABASE <name>;
+>>
+
+definition(columns) ::= <<
+<columns; separator=", ">
+>>
+
+condition(logic, column, sign, value) ::= <<
+<logic> <column> <sign> <value>
+>>
+
+constraints(pk, fk, unique, not_null, def) ::= <<
+<if(pk)>PRIMARY KEY <endif><if(fk)><fk> <endif><if(unique)>UNIQUE <endif><if(not_null)>NOT NULL <endif><if(def)><def><endif>
+>>
+
+default_(value) ::= <<
+DEFAULT <value>
+>>
+
+foreign_key(table, column) ::= <<
+FOREIGN KEY (<column>)
+>>
+
+where(conditions) ::= <<
+WHERE <conditions; separator=" ">
+>>
+
+order_by(orders) ::= <<
+ORDER BY <orders; separator=", ">
+>>
+
+columns(names) ::= <<
+<names; separator=", ">
+>>
+
+text(text) ::= <<
+<text>
+>>
+
+text_type(size) ::= <<
+VARCHAR<if(size)>(<size>)<endif>
+>>
+
+int_type(size) ::= <<
+INT<if(size)>(<size>)<endif>
+>>
+
+double_type(first, second) ::= <<
+DOUBLE<if(first)>(<first>,<second>)<endif>
+>>
+
+char_type() ::= <<
+CHAR
+>>
+
+bit_type() ::= <<
+BIT
+>>
+
+date_type() ::= <<
+DATE
+>>
