@@ -1,7 +1,7 @@
-package interpreter;
+package polsql.interpreter;
 
-import grammar.sqplGrammarLexer;
-import grammar.sqplGrammarParser;
+import polsql.grammar.sqplGrammarLexer;
+import polsql.grammar.sqplGrammarParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 

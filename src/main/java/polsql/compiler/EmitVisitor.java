@@ -1,10 +1,10 @@
-package compiler;
+package polsql.compiler;
 
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import grammar.sqplGrammarBaseVisitor;
-import grammar.sqplGrammarParser;
+import polsql.grammar.sqplGrammarBaseVisitor;
+import polsql.grammar.sqplGrammarParser;
 
 
 public class EmitVisitor extends sqplGrammarBaseVisitor<ST> {

@@ -1,0 +1,108 @@
+<!-- File: src/main/resources/static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQL Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        section { margin-bottom: 40px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        select, input[type="file"], textarea { width: 100%; padding: 8px; margin-bottom: 12px; }
+        button { padding: 10px 20px; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        textarea { height: 200px; resize: vertical; }
+    </style>
+</head>
+<body>
+
+<section>
+    <h2>Upload SQL File</h2>
+    <label for="fileInput">Select file:</label>
+    <input type="file" id="fileInput" accept=".sql">
+    <label for="templateSelectFile">Select template:</label>
+    <select id="templateSelectFile">
+        <option value="oracle">Oracle</option>
+        <option value="postgresql">PostgreSQL</option>
+        <option value="mssql">MSSQL</option>
+        <option value="mysql">MySQL</option>
+    </select>
+    <button id="uploadBtn">Upload &amp; Download</button>
+</section>
+
+<section>
+    <h2>Convert SQL Code</h2>
+    <label for="codeInput">Enter SQL code:</label>
+    <textarea id="codeInput" placeholder="Paste your SQL here"></textarea>
+    <label for="templateSelectText">Select template:</label>
+    <select id="templateSelectText">
+        <option value="oracle">Oracle</option>
+        <option value="postgresql">PostgreSQL</option>
+        <option value="mssql">MSSQL</option>
+        <option value="mysql">MySQL</option>
+    </select>
+    <button id="convertBtn">Convert &amp; Download</button>
+</section>
+
+<script>
+    // Handle file upload and download
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+        const fileInput = document.getElementById('fileInput');
+        if (!fileInput.files.length) {
+            alert('Please select a file first.');
+            return;
+        }
+        const file = fileInput.files[0];
+        const template = document.getElementById('templateSelectFile').value;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('template', template);
+
+        fetch('/upload', { method: 'POST', body: formData })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted.sql';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => alert('Error: ' + err));
+    });
+
+    // Handle code conversion and download
+    document.getElementById('convertBtn').addEventListener('click', () => {
+        const code = document.getElementById('codeInput').value.trim();
+        if (!code) {
+            alert('Please enter code to convert.');
+            return;
+        }
+        const template = document.getElementById('templateSelectText').value;
+        const params = new URLSearchParams({ code, template });
+
+        fetch('/upload/convert', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted.sql';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => alert('Error: ' + err));
+    });
+</script>
+
+</body>
+</html>

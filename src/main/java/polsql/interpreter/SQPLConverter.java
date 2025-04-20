@@ -1,7 +1,7 @@
-package interpreter;
+package polsql.interpreter;
 
-import grammar.sqplGrammarBaseVisitor;
-import grammar.sqplGrammarParser;
+import polsql.grammar.sqplGrammarBaseVisitor;
+import polsql.grammar.sqplGrammarParser;
 
 import java.util.ArrayList;
 import java.util.List;
