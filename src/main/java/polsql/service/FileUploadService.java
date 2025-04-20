@@ -23,34 +23,44 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class FileUploadService {
 
-    public FileUploadResponse processFile(final MultipartFile file) {
-        CharStream inp;
+    public byte[] processFile(final MultipartFile file, final String template) {
+        return convertFromCharStream(
+                readCharStreamFromFile(file),
+                template
+        ).getBytes(StandardCharsets.UTF_8);
+    }
 
+    public byte[] convertCode(final String code, final String template) {
+        return convertFromCharStream(
+                CharStreams.fromString(code),
+                template
+        ).getBytes(StandardCharsets.UTF_8);
+    }
+
+    private CharStream readCharStreamFromFile(MultipartFile file) {
         try {
-            inp = CharStreams.fromReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+            return CharStreams.fromReader(
+                    new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)
+            );
         } catch (IOException e) {
-            return new FileUploadResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException("Error reading uploaded file", e);
         }
+    }
 
+    private String convertFromCharStream(final CharStream inp, final String template) {
         sqplGrammarLexer lex = new sqplGrammarLexer(inp);
         CommonTokenStream tokens = new CommonTokenStream(lex);
         sqplGrammarParser par = new sqplGrammarParser(tokens);
 
         ParseTree tree = par.prog();
 
-        STGroup group = new STGroupFile("src/main/java/polsql/compiler/test.stg");
+        // Load template group based on user choice
+        String stgPath = String.format("src/main/java/polsql/compiler/%s.stg", template);
+        STGroup group = new STGroupFile(stgPath);
 
-        EmitVisitor em = new EmitVisitor(group);
-        ST res = em.visit(tree);
-        System.out.println(res.render());
-        try {
-            var wr = new FileWriter("wy.sql");
-            wr.write(res.render());
-            wr.close();
-        } catch (IOException e) {
-            return new FileUploadResponse(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new FileUploadResponse(HttpStatus.CREATED);
+        EmitVisitor visitor = new EmitVisitor(group);
+        ST st = visitor.visit(tree);
+        return st.render();
     }
 
 }
