@@ -152,63 +152,63 @@ logic_sign : (AND|OR|NOT)?;
 
 //typy danych dla kolumn
 data_type
-    : 'tekst'   #text
-    | 'tekst(' INT ')' #text
-    | 'liczba całkowita' #int
+    : 'tekst'             #text
+    | 'tekst(' INT ')'    #text
+    | 'liczba całkowita'  #int
     | 'liczba całkowita(' INT ')' #int
     | 'liczba zmiennoprzecinkowa' #double
-    | 'liczba zmiennoprzecinkowa(' INT COMMA INT ')' #double
-    | 'znak' #char
-    | 'bit' #bit
-    | 'data' #date
+    | 'liczba zmiennoprzecinkowa(' INT ',' INT ')' #double
+    | 'znak'  #char
+    | 'bit'   #bit
+    | 'data'  #date
     ;
 
 value : (INT|DOUBLE|ID|TEXT);
 //ograniczenie kolumny - domyślny typ danych
-default : 'domyślnie ' value;
+default : ('d' | 'D')'omyślnie ' value;
 //ograniczenie kolumny - klucz obcy
-foreign_key : 'klucz obcy dla ' ID '(' ID ')';
+foreign_key : ('k' | 'K')'lucz obcy dla ' ID '(' ID ')';
 
 //SŁOWA KLUCZOWE//
 
 //Podstawowe polecenia CRUD
 
-SELECT : 'wybierz' | 'znajdź' | 'pokaż' | 'wyświetl';
-CREATE : 'stwórz' | 'utwórz';
-INSERT_INTO : 'wstaw do tabeli' | 'dodaj do tabeli' | 'wpisz do tabeli';
-UPDATE : 'zmień' | 'podmień' | 'zaktualizuj' | 'aktualizuj' | 'popraw';
-DELETE : 'usuń obiekt z tabeli' | 'usuń element z tabeli' | 'usuń obiekty z tabeli' | 'usuń elementy z tabeli';
+SELECT : ('w' | 'W')'ybierz' | ('z' | 'Z')'najdź' | ('p' | 'P')'okaż' | ('w' | 'W')'yświetl';
+CREATE : ('s' | 'S')'twórz' | ('u' | 'U')'twórz';
+INSERT_INTO : ('w' | 'W')'staw do tabeli' | ('d' | 'D')'odaj do tabeli' | ('w' | 'W')'pisz do tabeli';
+UPDATE : ('z' | 'Z')'mień' | ('p' | 'P')'odmień' | ('z' | 'Z')'aktualizuj' | ('a' | 'A')'ktualizuj' | ('p' | 'P')'opraw';
+DELETE : ('u' | 'U')'suń obiekt z tabeli' | ('u' | 'U')'suń element z tabeli' | ('u' | 'U')'suń obiekty z tabeli' | ('u' | 'U')'suń elementy z tabeli';
 
-CREATE_TABLE : 'dodaj tabelę' | 'stwórz tabelę' | 'utwórz tabelę';
-DELETE_TABLE : 'usuń tabelę' | 'usuń';
-DESCRIBE : 'opisz tabelę' | 'przedstaw tabelę';
-ALTER_TABLE : 'modyfikuj tabelę' | 'aktualizuj tabelę' | 'zmień tabelę';
+CREATE_TABLE : ('d' | 'D')'odaj tabelę' | ('s' | 'S')'twórz tabelę' | ('u' | 'U')'twórz tabelę';
+DELETE_TABLE : ('u' | 'U')'suń tabelę' | ('u' | 'U')'suń';
+DESCRIBE : ('o' | 'O')'pisz tabelę' | ('p' | 'P')'rzedstaw tabelę';
+ALTER_TABLE : ('m' | 'M')'odyfikuj tabelę' | ('a' | 'A')'ktualizuj tabelę' | ('z' | 'Z')'mień tabelę';
 
-CREATE_DB : 'stwórz bazę danych' | 'utwórz bazę danych' ;
-DROP_DB : 'usuń bazę danych';
+CREATE_DB : ('s' | 'S')'twórz bazę danych' | ('u' | 'U')'twórz bazę danych' ;
+DROP_DB : ('u' | 'U')'suń bazę danych';
 
-SET : 'ustaw' | 'wpisz';
-FROM : 'z' | 'z tabeli';
-WHERE : 'gdzie' | 'w której' ;
-ORDER_BY : 'sortuj po' | 'sortuj według' | 'sortuj' ;
-ASC : 'rosnąco' ;
-DESC : 'malejąco' ;
-VALUES : 'o wartościach' | 'o danych';
-ADD : 'dodaj kolumnę' | 'wstaw kolumnę';
-MODIFY : 'modyfikuj kolumnę' | 'zmień kolumnę';
-DROP_COLUMN : 'usuń kolumnę';
-AS : 'jako';
+SET : ('u' | 'U')'staw' | ('w' | 'W')'pisz';
+FROM : ('z' | 'Z') | ('z' | 'Z')' tabeli';
+WHERE : ('g' | 'G')'dzie' | ('w' | 'W')' której' ;
+ORDER_BY : ('s' | 'S')'ortuj po' | ('s' | 'S')'ortuj według' | ('s' | 'S')'ortuj' ;
+ASC : ('r' | 'R')'osnąco' ;
+DESC : ('m' | 'M')'alejąco' ;
+VALUES : ('o' | 'O')' wartościach' | ('o' | 'O')' danych';
+ADD : ('d' | 'D')'odaj kolumnę' | ('w' | 'W')'staw kolumnę';
+MODIFY : ('m' | 'M')'odyfikuj kolumnę' | ('z' | 'Z')'mień kolumnę';
+DROP_COLUMN : ('u' | 'U')'suń kolumnę';
+AS : ('j' | 'J')'ako';
 SIGN : '>' | '<' | '==' | '>=' | '<=';
 
-STAR : 'wszystko' | 'wszystkie elementy' | 'wszystkie dane';
+STAR : ('w' | 'W')'szystko' | ('w' | 'W')'szystkie elementy' | ('w' | 'W')'szystkie dane';
 
-PRIMARY_KEY : 'klucz główny';
-UNIQUE : 'unikalny' | 'unikalna' | 'unikalne';
-NOT_NULL: 'niepuste' | 'niepusta';
+PRIMARY_KEY : ('k' | 'K')'lucz główny';
+UNIQUE : ('u' | 'U')'nikalny' | ('u' | 'U')'nikalna' | ('u' | 'U')'nikalne';
+NOT_NULL: ('n' | 'N')'iepuste' | ('n' | 'N')'iepusta';
 
-NOT : 'i nie' | 'nie';
-AND : 'i';
-OR : 'lub';
+NOT : 'i nie' | ('n' | 'N')'ie';
+AND : 'i' | ('o' | 'O')'raz';
+OR : ('l' | 'L')'ub';
 
 //SEKCJA DANYCH OGÓLNYCH//
 
