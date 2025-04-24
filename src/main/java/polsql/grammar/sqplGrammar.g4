@@ -43,7 +43,7 @@ update_item
 // wstaw do tabeli    towar    obiekty   (id, nazwa, cena, ilość)    o wartościach     (1, "jajka", 0.50, 20), (...)
 //   INSERT INTO      towar              (id, nazwa, cena, ilość)        VALUES        (1, "jajka", 0.50, 20), (...)
 insert
-    : INSERT_INTO ID ('obiekt'|'obiekty') object VALUES object (',' object)*
+    : INSERT_INTO ID ('obiekt'|'obiekty') object VALUES object (COMMA object)*
     ;
 
 //usuwanie elementów z tablicy
@@ -118,20 +118,20 @@ order : (ASC|DESC)? ;
 //używany w insert, ma na celu wskazać kolumny lub ich wartości
 //(ID, imię, nazwisko) lub (6, "Michał", "Kaluska")
 object
-    : '(' (ID_COMMA)* ID ')' #object_template
-    | '(' (value ',')* value ')' #object_instance
+    : '(' (ID COMMA)* ID ')' #object_template
+    | '(' (value COMMA)* value ')' #object_instance
     ;
 
 //określa nazwy, typy i ograniczenia kolumn w tabeli
 //(ID jako liczba całkowita klucz główny nie puste, ...) -> (ID INT PRIMARY KEY NOT NULL, ...)
 definition
-    : '(' (ID AS data_type constraints ',')* ID AS data_type constraints ')'
+    : '(' (ID AS data_type constraints COMMA)* ID AS data_type constraints ')'
     ;
 
 //Wybór kolumn do pokazania (jeden lub więcej)
 columns
     : ID+ #columns_without_coma
-    | ID_COMMA+ ID #columns_with_coma
+    | (ID COMMA)+ ID #columns_with_coma
     | STAR #columns_star
     ;
 
@@ -157,7 +157,7 @@ data_type
     | 'liczba całkowita' #int
     | 'liczba całkowita(' INT ')' #int
     | 'liczba zmiennoprzecinkowa' #double
-    | 'liczba zmiennoprzecinkowa(' INT ',' INT ')' #double
+    | 'liczba zmiennoprzecinkowa(' INT COMMA INT ')' #double
     | 'znak' #char
     | 'bit' #bit
     | 'data' #date
@@ -204,7 +204,7 @@ STAR : 'wszystko' | 'wszystkie elementy' | 'wszystkie dane';
 
 PRIMARY_KEY : 'klucz główny';
 UNIQUE : 'unikalny' | 'unikalna' | 'unikalne';
-NOT_NULL: 'nie puste' | 'nie pusta';
+NOT_NULL: 'niepuste' | 'niepusta';
 
 NOT : 'i nie' | 'nie';
 AND : 'i';
@@ -214,13 +214,12 @@ OR : 'lub';
 
 //Identyfikator np nazwy tabeli lub kolumny
 ID : [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ_] [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9_]*;
-
-ID_COMMA : [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ_] [a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9_]* ',';
+COMMA : ',';
 SEMI : ';';
 DOUBLE : [0-9]+ '.' [0-9]+ ;
 INT : [0-9]+ ;
 TEXT : '"' ( ~["] | '""' )* '"' ;
 
 //Pominięcie białych znaków
-WS : [ \t\r\n]+ -> skip ;
+WS : [ \t\r\n\u00A0]+ -> skip ;
 
